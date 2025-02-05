@@ -7,14 +7,16 @@ import com.cadastro.relacional.empresa.mapper.GenericMapper;
 import com.cadastro.relacional.empresa.repository.EmpresaRepository;
 import com.cadastro.relacional.empresa.service.EmpresaService;
 import com.cadastro.relacional.empresa.service.exception.EmpresaNotFoundException;
-import com.cadastro.relacional.empresa.service.exception.InvalidEmpresaUpdateException;
+import com.cadastro.relacional.empresa.service.exception.InvalidEmpresaException;
 import com.cadastro.relacional.empresa.service.exception.InvalidParameterException;
-import org.hibernate.ObjectNotFoundException;
+import com.cadastro.relacional.empresa.utils.CNPJFormatterUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
@@ -26,28 +28,36 @@ public class EmpresaServiceImpl implements EmpresaService {
     private GenericMapper mapper;
 
     @Override
+    @Transactional
     public EmpresaResponseDTO cadastrar(EmpresaRequestDTO empresaRequestDTO) {
+        if (empresaRepository.existsByCnpj(empresaRequestDTO.getCnpj())) {
+            throw new InvalidEmpresaException("CNPJ já se encontra cadastrado em outra empresa");
+        }
         Empresa empresa = mapper.dtoParaEntidade(empresaRequestDTO, Empresa.class);
+        empresa.setCnpj(CNPJFormatterUtil.formatCNPJ(empresa.getCnpj()));
         empresa = empresaRepository.save(empresa);
         return mapper.entidadeParaDTO(empresa, EmpresaResponseDTO.class);
     }
 
     @Override
+    @Transactional
     public EmpresaResponseDTO atualizar(EmpresaRequestDTO empresaRequestDTO, String cnpj) {
-        Empresa empresa = empresaRepository.findByCnpj(cnpj)
-                .orElseThrow(() -> new EmpresaNotFoundException("empresa com cnpj " + cnpj + " não encontrada " ));
-        if (!empresa.getCnpj().equals(empresaRequestDTO.getCnpj())) {
-            throw new InvalidEmpresaUpdateException("CNPJ não pode ser atualizado ");
+        String cnpjFormatado = CNPJFormatterUtil.formatCNPJ(cnpj);
+        Empresa empresaPersistida = empresaRepository.findByCnpj(cnpjFormatado)
+                .orElseThrow(() -> new EmpresaNotFoundException("empresa com cnpj " + cnpjFormatado + " não encontrada " ));
+        if (!empresaPersistida.getCnpj().equals(CNPJFormatterUtil.formatCNPJ(empresaRequestDTO.getCnpj()))) {
+            throw new InvalidEmpresaException("CNPJ não pode ser atualizado ");
         }
-        empresa = mapper.dtoParaEntidade(empresaRequestDTO, Empresa.class);
-        empresa = empresaRepository.save(empresa);
+        BeanUtils.copyProperties(empresaRequestDTO, empresaPersistida);
+        Empresa empresa = empresaRepository.save(empresaPersistida);
         return mapper.entidadeParaDTO(empresa, EmpresaResponseDTO.class);
     }
 
     @Override
     public EmpresaResponseDTO buscarPorCNPJ(String cnpj) {
-        Empresa empresa = empresaRepository.findByCnpj(cnpj)
-                .orElseThrow(() -> new EmpresaNotFoundException("empresa com cnpj " + cnpj + " não encontrada " ));
+        String cnpjFormatado = CNPJFormatterUtil.formatCNPJ(cnpj);
+        Empresa empresa = empresaRepository.findByCnpj(cnpjFormatado)
+                .orElseThrow(() -> new EmpresaNotFoundException("empresa com cnpj " + cnpjFormatado + " não encontrada " ));
         return mapper.entidadeParaDTO(empresa, EmpresaResponseDTO.class);
     }
 
@@ -69,10 +79,12 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     @Override
+    @Transactional
     public void excluir(String cnpj) {
         if (cnpj == null || cnpj.isEmpty())  {
             throw new InvalidParameterException("CNPJ da empresa não pode ser nulo ou vazio");
         }
-        empresaRepository.deleteByCnpj(cnpj);
+        String cnpjFormatado = CNPJFormatterUtil.formatCNPJ(cnpj);
+        empresaRepository.deleteByCnpj(cnpjFormatado);
     }
 }

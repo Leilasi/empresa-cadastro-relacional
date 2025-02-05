@@ -12,5 +12,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     Optional<Empresa> findByCnpj(String cnpj);
     Page<Empresa> findByNomeFantasiaOrEnderecoCidade(String nomeFantasia, String cidade, Pageable pageable);
     void deleteByCnpj(String cnpj);
+    boolean existsByCnpj(String cnpj);
+
 
 }

@@ -1,17 +1,43 @@
 package com.cadastro.relacional.empresa.dto.request;
 
 import com.cadastro.relacional.empresa.entity.enums.SituacaoEmpresa;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.time.LocalDate;
 
 public class EmpresaRequestDTO {
+
+    @NotEmpty(message = "O campo cnpj é obrigatório")
+    @CNPJ(message = "O cnpj informado é inválido")
     private String cnpj;
+
+    @NotEmpty(message = "O campo razão Social é obrigatório")
     private String razaoSocial;
+
+    @NotEmpty(message = "O campo Nome Fantasia é obrigatório")
     private String nomeFantasia;
+
+    @NotEmpty(message = "O campo telefone é obrigatório")
+    @Pattern(regexp = "^\\(?\\d{2}\\)? ?9?\\d{4}-?\\d{4}$", message = "O Telefone informado é inválido")
     private String telefone;
+
+    @NotNull(message = "O campo data fundação é obrigatório")
     private LocalDate dataFundacao;
+
+    @NotEmpty(message = "O campo email é obrigatório")
+    @Email(message = "o email informado é inválido")
     private String email;
+
+    @NotNull(message = "O campo situação empresa é obrigatório")
     private SituacaoEmpresa situacaoEmpresa;
+
+    @NotNull(message = "O endereço da empresa é obrigatório")
+    @Valid
     private EnderecoRequestDTO endereco;
 
     public EmpresaRequestDTO() {

@@ -1,12 +1,28 @@
 package com.cadastro.relacional.empresa.dto.request;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 public class EnderecoRequestDTO  {
+
+   @NotEmpty(message = "O campo rua é obrigatório")
    private String rua;
+
+   @NotEmpty(message = "O campo número é obrigatório")
    private String numero;
    private String complemento;
+
+   @NotEmpty(message = "O campo bairro é obrigatório")
    private String bairro;
+
+   @NotEmpty(message = "O campo cidade é obrigatório")
    private String cidade;
+
+   @NotEmpty(message = "O campo estado é obrigatório")
+   @Size(max = 2, min = 2, message = "O campo estado deve conter apenas {max} digitos")
    private String estado;
+
+   @NotEmpty(message = "O campo cep é obrigatório")
    private String cep;
 
     public EnderecoRequestDTO() {

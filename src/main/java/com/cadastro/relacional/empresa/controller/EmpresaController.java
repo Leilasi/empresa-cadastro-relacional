@@ -3,6 +3,7 @@ package com.cadastro.relacional.empresa.controller;
 import com.cadastro.relacional.empresa.dto.request.EmpresaRequestDTO;
 import com.cadastro.relacional.empresa.dto.response.EmpresaResponseDTO;
 import com.cadastro.relacional.empresa.service.EmpresaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +17,23 @@ public class EmpresaController {
     private EmpresaService empresaService;
 
     @PostMapping
-    public ResponseEntity<EmpresaResponseDTO> cadastrar(@RequestBody EmpresaRequestDTO empresaRequestDTO) {
+    public ResponseEntity<EmpresaResponseDTO> cadastrar(@RequestBody @Valid EmpresaRequestDTO empresaRequestDTO) {
         return ResponseEntity.ok(empresaService.cadastrar(empresaRequestDTO));
     }
 
-    @PutMapping("/{cnpj}")
-    public ResponseEntity<EmpresaResponseDTO> atualizar(@RequestBody EmpresaRequestDTO empresaRequestDTO, @PathVariable("cnpj") String cnpj) {
+    @PutMapping
+    public ResponseEntity<EmpresaResponseDTO> atualizar(@RequestBody @Valid EmpresaRequestDTO empresaRequestDTO, @RequestParam String cnpj) {
         return ResponseEntity.ok(empresaService.atualizar(empresaRequestDTO, cnpj));
     }
 
-    @DeleteMapping("/{cnpj}")
-    public ResponseEntity<Void> excluir(@PathVariable("cnpj") String cnpj) {
+    @DeleteMapping
+    public ResponseEntity<Void> excluir(@RequestParam String cnpj) {
         empresaService.excluir(cnpj);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{cnpj}")
-    public ResponseEntity<EmpresaResponseDTO> buscarPorCnpj(@PathVariable String cnpj) {
+    @GetMapping("/buscar-por-cnpj")
+    public ResponseEntity<EmpresaResponseDTO> buscarPorCnpj(@RequestParam String cnpj) {
         return ResponseEntity.ok(empresaService.buscarPorCNPJ(cnpj));
     }
 
