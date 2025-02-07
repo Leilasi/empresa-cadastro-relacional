@@ -8,9 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class EmpresaRequestDTO {
+public class EmpresaRequestDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @NotEmpty(message = "O campo cnpj é obrigatório")
     @CNPJ(message = "O cnpj informado é inválido")

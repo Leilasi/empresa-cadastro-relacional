@@ -1,16 +1,20 @@
 package com.cadastro.relacional.empresa.dto.response;
 
 import com.cadastro.relacional.empresa.entity.enums.SituacaoEmpresa;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 
-public class EmpresaResponseDTO {
+public class EmpresaResponseDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
         private Long id;
         private String cnpj;
         private String razaoSocial;
         private String nomeFantasia;
         private String telefone;
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate dataFundacao;
         private String email;
         private SituacaoEmpresa situacaoEmpresa;

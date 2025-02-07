@@ -87,4 +87,8 @@ public class EmpresaServiceImpl implements EmpresaService {
         String cnpjFormatado = CNPJFormatterUtil.formatCNPJ(cnpj);
         empresaRepository.deleteByCnpj(cnpjFormatado);
     }
+
+
+
+
 }

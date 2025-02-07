@@ -1,6 +1,9 @@
 package com.cadastro.relacional.empresa.dto.response;
 
-public class  EnderecoResponseDTO{
+import java.io.Serializable;
+
+public class  EnderecoResponseDTO implements Serializable {
+   private static final long serialVersionUID = 1L;
    private Long id;
    private String rua;
    private String numero;

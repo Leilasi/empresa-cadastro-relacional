@@ -3,7 +3,10 @@ package com.cadastro.relacional.empresa.dto.request;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public class EnderecoRequestDTO  {
+import java.io.Serializable;
+
+public class EnderecoRequestDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
    @NotEmpty(message = "O campo rua é obrigatório")
    private String rua;
