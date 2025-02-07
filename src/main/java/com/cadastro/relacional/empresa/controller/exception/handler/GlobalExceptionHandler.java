@@ -6,6 +6,8 @@ import com.cadastro.relacional.empresa.service.exception.EmpresaNotFoundExceptio
 import com.cadastro.relacional.empresa.service.exception.InvalidEmpresaException;
 import com.cadastro.relacional.empresa.service.exception.InvalidParameterException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,9 +21,12 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        LOGGER.error("error de validacão de campos ", ex);
+
         final HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         final ValidationError error = new ValidationError(
                 Instant.now().toEpochMilli(),
@@ -33,6 +38,7 @@ public class GlobalExceptionHandler {
 
         final List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         for (FieldError field : fieldErrors) {
+            LOGGER.error("error ao validar o campo {}: {}", field.getField(), field.getDefaultMessage());
             error.addError(field.getField(), field.getDefaultMessage());
         }
 
@@ -41,6 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmpresaNotFoundException.class)
     public ResponseEntity<StandardError> handleResponseStatusException(EmpresaNotFoundException ex, HttpServletRequest request) {
+        LOGGER.error("entidade não encontrada ", ex);
         final HttpStatus status = HttpStatus.NOT_FOUND;
         StandardError error = new StandardError(
                 Instant.now().toEpochMilli(),
@@ -54,6 +61,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidEmpresaException.class)
     public ResponseEntity<StandardError> handleResponseStatusException(InvalidEmpresaException ex, HttpServletRequest request) {
+        LOGGER.error("error ao processar a requisão ", ex);
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError error = new StandardError(
                 Instant.now().toEpochMilli(),
@@ -67,6 +75,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidParameterException.class)
     public ResponseEntity<StandardError> handleResponseStatusException(InvalidParameterException ex, HttpServletRequest request) {
+        LOGGER.error("parâmetros enviado na requisão inválidos ", ex);
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError error = new StandardError(
                 Instant.now().toEpochMilli(),
@@ -80,6 +89,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler( IllegalArgumentException.class)
     public ResponseEntity<StandardError> handleResponseStatusException( IllegalArgumentException ex, HttpServletRequest request) {
+        LOGGER.error("argumento inválido ", ex);
         final HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError error = new StandardError(
                 Instant.now().toEpochMilli(),
@@ -93,6 +103,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<StandardError> handleResponseStatusException(Exception ex, HttpServletRequest request) {
+        LOGGER.error("Erro ao tentar processar o servidor ", ex);
         final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         StandardError error = new StandardError(
                 Instant.now().toEpochMilli(),
@@ -106,6 +117,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<StandardError> handleResponseStatusException(ResponseStatusException ex, HttpServletRequest request) {
+        LOGGER.error("Erro ao processar requisição ", ex);
         StandardError error = new StandardError(
                 Instant.now().toEpochMilli(),
                 ex.getStatusCode().value(),

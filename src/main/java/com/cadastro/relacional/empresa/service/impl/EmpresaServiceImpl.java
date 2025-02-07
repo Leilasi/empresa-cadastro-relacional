@@ -10,6 +10,8 @@ import com.cadastro.relacional.empresa.service.exception.EmpresaNotFoundExceptio
 import com.cadastro.relacional.empresa.service.exception.InvalidEmpresaException;
 import com.cadastro.relacional.empresa.service.exception.InvalidParameterException;
 import com.cadastro.relacional.empresa.utils.CNPJFormatterUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmpresaServiceImpl.class);
 
     @Autowired
     private  EmpresaRepository empresaRepository;
@@ -36,6 +39,7 @@ public class EmpresaServiceImpl implements EmpresaService {
         Empresa empresa = mapper.dtoParaEntidade(empresaRequestDTO, Empresa.class);
         empresa.setCnpj(CNPJFormatterUtil.formatCNPJ(empresa.getCnpj()));
         empresa = empresaRepository.save(empresa);
+        LOGGER.info("empresa registrada com sucesso");
         return mapper.entidadeParaDTO(empresa, EmpresaResponseDTO.class);
     }
 
@@ -50,6 +54,7 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
         BeanUtils.copyProperties(empresaRequestDTO, empresaPersistida);
         Empresa empresa = empresaRepository.save(empresaPersistida);
+        LOGGER.info("empresa atualizada com sucesso");
         return mapper.entidadeParaDTO(empresa, EmpresaResponseDTO.class);
     }
 
@@ -58,6 +63,7 @@ public class EmpresaServiceImpl implements EmpresaService {
         String cnpjFormatado = CNPJFormatterUtil.formatCNPJ(cnpj);
         Empresa empresa = empresaRepository.findByCnpj(cnpjFormatado)
                 .orElseThrow(() -> new EmpresaNotFoundException("empresa com cnpj " + cnpjFormatado + " não encontrada " ));
+        LOGGER.info("empresa encontrada com sucesso na busca por CNPJ");
         return mapper.entidadeParaDTO(empresa, EmpresaResponseDTO.class);
     }
 
@@ -86,6 +92,7 @@ public class EmpresaServiceImpl implements EmpresaService {
         }
         String cnpjFormatado = CNPJFormatterUtil.formatCNPJ(cnpj);
         empresaRepository.deleteByCnpj(cnpjFormatado);
+        LOGGER.info("empresa excluida com sucesso");
     }
 
 
