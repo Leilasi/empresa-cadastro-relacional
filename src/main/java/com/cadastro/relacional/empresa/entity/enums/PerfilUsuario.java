@@ -1,23 +1,29 @@
 package com.cadastro.relacional.empresa.entity.enums;
 
 public enum PerfilUsuario {
-    ADMIN (0, "Administrador"),
-    OPERACIONAL (1, "Operacional");
+    ADMIN (0, "Administrador", "ROLE_ADMIN"),
+    OPERACIONAL (1, "Operacional", "ROLE_OPERACIONAL");
 
     private final int codigo;
-    private final String descricaoCompleta;
+    private final String descricao;
+    private final String descricaoRole;
 
-    PerfilUsuario(int codigo, String descricaoCompleta) {
+    PerfilUsuario(int codigo, String descricao, String descricaoRole) {
         this.codigo = codigo;
-        this.descricaoCompleta = descricaoCompleta;
+        this.descricao = descricao;
+        this.descricaoRole = descricaoRole;
     }
 
     public int getCodigo() {
         return codigo;
     }
 
-    public String getDescricaoCompleta() {
-        return descricaoCompleta;
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public String getDescricaoRole() {
+        return descricaoRole;
     }
 
     public static PerfilUsuario toEnum(Integer codigo) {

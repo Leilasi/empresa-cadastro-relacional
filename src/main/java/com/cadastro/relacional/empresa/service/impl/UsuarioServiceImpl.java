@@ -1,6 +1,7 @@
 package com.cadastro.relacional.empresa.service.impl;
 
 import com.cadastro.relacional.empresa.dto.request.UsuarioRequestDTO;
+import com.cadastro.relacional.empresa.dto.response.UsuarioAutenticacaoResponseDTO;
 import com.cadastro.relacional.empresa.dto.response.UsuarioResponseDTO;
 import com.cadastro.relacional.empresa.entity.Usuario;
 import com.cadastro.relacional.empresa.mapper.GenericMapper;
@@ -36,14 +37,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponseDTO obterPorEmail(String email) {
+        Usuario usuario = obterUsuarioPorEmail(email);
+        LOGGER.info("Usuario encontrado com Sucesso: {}", email);
+        return mapper.entidadeParaDTO(usuario, UsuarioResponseDTO.class);
+    }
+
+    private Usuario obterUsuarioPorEmail(String email) {
         if (email == null || email.isEmpty()) {
             throw new InvalidParameterException("Email não pode ser vazio");
         }
         Usuario usuario = usuarioRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsuarioNotFoundException("o usuário não encontrado"));
-        LOGGER.info("Usuario encontrado com Sucesso: {}", email);
-        return mapper.entidadeParaDTO(usuario, UsuarioResponseDTO.class);
+        return usuario;
+
     }
 
     @Override
@@ -55,6 +62,13 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario = usuarioRepository.save(usuario);
         LOGGER.info("Usuario cadastrado com Sucesso: {}", usuario.getEmail());
         return mapper.entidadeParaDTO(usuario, UsuarioResponseDTO.class);
+    }
+
+    @Override
+    public UsuarioAutenticacaoResponseDTO obterPorLogin(String login) {
+        Usuario usuario = obterUsuarioPorEmail(login);
+        LOGGER.info("Usuario cadastrado com Sucesso: {}", usuario.getEmail());
+        return mapper.entidadeParaDTO(usuario, UsuarioAutenticacaoResponseDTO.class);
     }
 
 }

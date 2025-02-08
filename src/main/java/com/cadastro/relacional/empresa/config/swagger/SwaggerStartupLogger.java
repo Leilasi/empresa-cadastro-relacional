@@ -1,4 +1,4 @@
-package com.cadastro.relacional.empresa.config;
+package com.cadastro.relacional.empresa.config.swagger;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
