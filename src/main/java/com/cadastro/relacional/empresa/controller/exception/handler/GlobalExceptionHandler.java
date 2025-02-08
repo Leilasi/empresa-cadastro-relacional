@@ -2,9 +2,7 @@ package com.cadastro.relacional.empresa.controller.exception.handler;
 
 import com.cadastro.relacional.empresa.controller.exception.StandardError;
 import com.cadastro.relacional.empresa.controller.exception.ValidationError;
-import com.cadastro.relacional.empresa.service.exception.EmpresaNotFoundException;
-import com.cadastro.relacional.empresa.service.exception.InvalidEmpresaException;
-import com.cadastro.relacional.empresa.service.exception.InvalidParameterException;
+import com.cadastro.relacional.empresa.service.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +57,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    public ResponseEntity<StandardError> handleResponseStatusException(UsuarioNotFoundException ex, HttpServletRequest request) {
+        LOGGER.error("entidade não encontrada ", ex);
+        final HttpStatus status = HttpStatus.NOT_FOUND;
+        StandardError error = new StandardError(
+                Instant.now().toEpochMilli(),
+                status.value(),
+                "Entidade não encontrada",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(error);
+    }
+
     @ExceptionHandler(InvalidEmpresaException.class)
     public ResponseEntity<StandardError> handleResponseStatusException(InvalidEmpresaException ex, HttpServletRequest request) {
         LOGGER.error("error ao processar a requisão ", ex);
@@ -72,6 +84,21 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(status).body(error);
     }
+
+    @ExceptionHandler(InvalidUsuarioException.class)
+    public ResponseEntity<StandardError> handleResponseStatusException(InvalidUsuarioException ex, HttpServletRequest request) {
+        LOGGER.error("error ao processar a requisão ", ex);
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError error = new StandardError(
+                Instant.now().toEpochMilli(),
+                status.value(),
+                "Error ao processar requisição",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(error);
+    }
+
 
     @ExceptionHandler(InvalidParameterException.class)
     public ResponseEntity<StandardError> handleResponseStatusException(InvalidParameterException ex, HttpServletRequest request) {
