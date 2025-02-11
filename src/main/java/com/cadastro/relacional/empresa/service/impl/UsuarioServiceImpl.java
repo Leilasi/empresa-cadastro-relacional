@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,9 +60,14 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new InvalidUsuarioException("Já existe usuário cadastrado com email informado");
         }
         Usuario usuario = mapper.entidadeParaDTO(usuarioRequestDTO, Usuario.class);
+        usuario.setSenha(obterSenhaEncriptografada(usuarioRequestDTO.getSenha()));
         usuario = usuarioRepository.save(usuario);
         LOGGER.info("Usuario cadastrado com Sucesso: {}", usuario.getEmail());
         return mapper.entidadeParaDTO(usuario, UsuarioResponseDTO.class);
+    }
+
+    private String obterSenhaEncriptografada(String senhaUsuario) {
+        return new BCryptPasswordEncoder().encode(senhaUsuario);
     }
 
     @Override
