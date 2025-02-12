@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-public class UsuarioAutenticacaoResponseDTO implements Serializable, UserDetails {
+public class UsuarioAutentificado implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -18,10 +18,10 @@ public class UsuarioAutenticacaoResponseDTO implements Serializable, UserDetails
     private String senha;
     private PerfilUsuario perfil;
 
-    public UsuarioAutenticacaoResponseDTO() {
+    public UsuarioAutentificado() {
     }
 
-    public UsuarioAutenticacaoResponseDTO(Long id, String nome, String email, String senha, PerfilUsuario perfil) {
+    public UsuarioAutentificado(Long id, String nome, String email, String senha, PerfilUsuario perfil) {
         this.id = id;
         this.nome = nome;
         this.email = email;

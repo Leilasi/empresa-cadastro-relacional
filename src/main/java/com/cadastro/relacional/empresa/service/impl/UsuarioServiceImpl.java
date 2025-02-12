@@ -1,7 +1,7 @@
 package com.cadastro.relacional.empresa.service.impl;
 
 import com.cadastro.relacional.empresa.dto.request.UsuarioRequestDTO;
-import com.cadastro.relacional.empresa.dto.response.UsuarioAutenticacaoResponseDTO;
+import com.cadastro.relacional.empresa.dto.response.UsuarioAutentificado;
 import com.cadastro.relacional.empresa.dto.response.UsuarioResponseDTO;
 import com.cadastro.relacional.empresa.entity.Usuario;
 import com.cadastro.relacional.empresa.mapper.GenericMapper;
@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,10 +73,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioAutenticacaoResponseDTO obterPorLogin(String login) {
-        Usuario usuario = obterUsuarioPorEmail(login);
-        LOGGER.info("Usuario cadastrado com Sucesso: {}", usuario.getEmail());
-        return mapper.entidadeParaDTO(usuario, UsuarioAutenticacaoResponseDTO.class);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = obterUsuarioPorEmail(email);
+        LOGGER.info("Usuario obtido com Sucesso: {}", usuario.getEmail());
+        return mapper.entidadeParaDTO(usuario, UsuarioAutentificado.class);
     }
-
 }

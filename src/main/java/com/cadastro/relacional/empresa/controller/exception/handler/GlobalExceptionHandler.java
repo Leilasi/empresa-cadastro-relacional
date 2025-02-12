@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -122,6 +124,34 @@ public class GlobalExceptionHandler {
                 Instant.now().toEpochMilli(),
                 status.value(),
                 "Parâmetros da requisão inválido",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler( InternalAuthenticationServiceException.class)
+    public ResponseEntity<StandardError> handleResponseStatusException( InternalAuthenticationServiceException ex, HttpServletRequest request) {
+        LOGGER.error("falha ao autentificar usuário ", ex);
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError error = new StandardError(
+                Instant.now().toEpochMilli(),
+                status.value(),
+                "falha ao autentificar usuário",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler( BadCredentialsException.class)
+    public ResponseEntity<StandardError> handleResponseStatusException( BadCredentialsException ex, HttpServletRequest request) {
+        LOGGER.error("falha ao autentificar usuário ", ex);
+        final HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError error = new StandardError(
+                Instant.now().toEpochMilli(),
+                status.value(),
+                "falha ao autentificar usuário",
                 ex.getMessage(),
                 request.getRequestURI()
         );
