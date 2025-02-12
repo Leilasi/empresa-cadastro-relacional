@@ -30,10 +30,11 @@ public class Empresa {
     @Column(name = "data_fundacao", nullable = false)
     private LocalDate dataFundacao;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "situacao_empresa", nullable = false)
+    @Enumerated(EnumType.STRING)
     private SituacaoEmpresa situacaoEmpresa;
 
     @OneToOne(cascade = CascadeType.ALL)

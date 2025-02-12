@@ -17,13 +17,14 @@ public class Usuario {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "senha", nullable = false)
     private String senha;
 
     @Column(name = "perfil", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PerfilUsuario perfil;
 
     public Usuario() {
