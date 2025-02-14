@@ -19,11 +19,6 @@ Este projeto tem como objetivo fornecer um sistema de cadastro de empresas utili
 ## Arquitetura
 O projeto segue a arquitetura **MVC (Model-View-Controller)**, garantindo separação de responsabilidades e facilidade de manutenção.
 
-## Estrutura do Projeto
-A estrutura do projeto foi planejada para facilitar a organização e escalabilidade. Abaixo, segue um exemplo visual:
-
-![Estrutura do Projeto](link_para_imagem)
-
 ## Configuração e Execução
 1. **Clone o repositório**:
    ```bash
