@@ -35,6 +35,11 @@ O projeto segue a arquitetura **MVC (Model-View-Controller)**, garantindo separa
 4. **Acesse a aplicação**:
    - API disponível em `http://localhost:8080`
    - Swagger: http://localhost:8080/swagger-ui/index.html
+     
+5- **Credenciais do usuário admin default para teste de autenticação:**
+Login: admin@gmail.com
+Senha: 123
+     
 
 ## Contribuições
 Contribuições são bem-vindas! Sinta-se à vontade para abrir um **pull request** ou relatar problemas na aba de **issues**.
