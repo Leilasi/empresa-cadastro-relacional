@@ -3,7 +3,7 @@
 Este projeto tem como objetivo fornecer um sistema de cadastro de empresas utilizando uma arquitetura modular e bem estruturada(MVC).
 
 ## Tecnologias Utilizadas
-- **Java**
+- **Java17**
 - **Spring Boot**
 - **Spring Data JPA**
 - **Banco Relacional: PostgreSQL**
