@@ -40,5 +40,5 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir um **pull reques
 
 ---
 
-Feito com ❤️ por [leila Fernanda da Silva]  [estudante da Engenharia da Computação] 
+Feito com ❤️ por [Leila Fernanda da Silva]  [Estudante da Engenharia da Computação] 
 
